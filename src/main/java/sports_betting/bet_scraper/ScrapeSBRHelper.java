@@ -199,7 +199,6 @@ public class ScrapeSBRHelper {
             if (!rootDir.exists()) {
                 rootDir.mkdirs();
             }
-            System.out.println("Saving to: "+ file.getAbsolutePath());
             String json;
             if(file.exists() && useCache) {
                 json = FileUtils.readFileToString(file, Charset.defaultCharset());
@@ -236,7 +235,12 @@ public class ScrapeSBRHelper {
                     Elements elements = doc.select("#bettingOddsGridContainer");
                     json = elements.toString();
                     if (json.trim().length() == 0) {
-                        return null;
+                        elements = doc.select("#oddsGridContainer");
+                        json = elements.toString();
+                        if (json.trim().length() == 0) {
+                            System.out.println("No odds grid container...");
+                            return null;
+                        }
                     }
                     if (json.contains("No odds available at this time for this league")) {
                         System.out.println("No odds found...");
@@ -246,6 +250,7 @@ public class ScrapeSBRHelper {
                 boolean finished = false;
                 try {
                     FileUtils.writeStringToFile(file, json, "UTF-8");
+                    System.out.println("Saved to: "+ file.getAbsolutePath());
                     finished = true;
                 } catch (Exception e) {
                     e.printStackTrace();

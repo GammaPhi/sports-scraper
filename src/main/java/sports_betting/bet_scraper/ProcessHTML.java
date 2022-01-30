@@ -121,9 +121,6 @@ public class ProcessHTML {
                 //System.out.println("Could not find teams in: "+teams);
                 continue;
             }
-            if (sport.contains("soccer")) {
-               // System.out.println(element.html());
-            }
             String team1 = teams.get(0).text();
             String team2 = teams.get(1).text();
             Integer winner = null;
@@ -158,11 +155,11 @@ public class ProcessHTML {
                         results.put("home_score_periods", nPeriods2);
                     } catch(Exception e) {
                         // team is likely still in play
-                        System.out.println(scoreBoard.html());
-                        System.out.println("Team1: "+team1);
-                        System.out.println("Team2: "+team2);
-                        System.out.println("Sport: "+sport);
-                        System.out.println("Date: "+date.toString());
+                        //System.out.println(scoreBoard.html());
+                        //System.out.println("Team1: "+team1);
+                        //System.out.println("Team2: "+team2);
+                        //System.out.println("Sport: "+sport);
+                        //System.out.println("Date: "+date.toString());
                     }
 
                 } else {
@@ -219,6 +216,10 @@ public class ProcessHTML {
                 allBooks.add(0, opener.get(0));
             }
             for(Element book : allBooks) {
+                if (sport.equals("nba") && date.equals(LocalDate.of(2022, 1, 30))) {
+                    System.out.println("Teams: "+team1+", "+team2);
+                    System.out.println("Book: "+book.html());
+                }
                 String bookName;
                 int rel;
                 if (book.hasClass("eventLine-opener")) {
@@ -237,6 +238,8 @@ public class ProcessHTML {
                 if(val2==null || val2.trim().isEmpty()) {
                     continue;
                 }
+                val1 = val1.replaceAll("&"+"nbsp;", " ").replaceAll(String.valueOf((char) 160), " ");
+                val2 = val2.replaceAll("&"+"nbsp;", " ").replaceAll(String.valueOf((char) 160), " ");
                 val1 = handleFractions(val1);
                 val2 = handleFractions(val2);
                 String p1;
@@ -267,14 +270,14 @@ public class ProcessHTML {
                 } else if (betType.equals(ScrapeSBRHelper.SPREAD_FRIENDLY)) {
                     String[] val1Split = val1.split(" ");
                     if(val1Split.length<2) {
-                        //System.out.println("Illegal val1: "+val1);
-                        //System.out.println("Book: "+book.toString());
+                        System.out.println("Illegal val1: "+val1);
+                        System.out.println("Book: "+book.toString());
                         continue;
                     }
                     String[] val2Split = val2.split(" ");
                     if(val2Split.length<2) {
-                        //System.out.println("Illegal val2: "+val2);
-                        //System.out.println("Book: "+book.toString());
+                        System.out.println("Illegal val2: "+val2);
+                        System.out.println("Book: "+book.toString());
                         continue;
                     }
                     p1 = val1Split[1];

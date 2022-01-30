@@ -8,6 +8,15 @@ public class ScrapeAll {
         final int NUM_DAYS_FUTURE = Integer.parseInt(System.getenv().getOrDefault("NUM_DAYS_FUTURE", "7"));
         LocalDate date = LocalDate.now().minusDays(NUM_DAYS_PAST);
         boolean useCache = System.getenv().getOrDefault("USE_CACHE", "t").toLowerCase().startsWith("t");
+
+        try {
+            ScrapeNBA.run(useCache, date);
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println("Error on nba...");
+            System.exit(1);
+        }
+
         try {
             ScrapeBrazilSerieA.run(useCache, date);
         } catch(Exception e) {
@@ -80,13 +89,6 @@ public class ScrapeAll {
             System.exit(1);
         }
 
-        try {
-            ScrapeNBA.run(useCache, date);
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("Error on nba...");
-            System.exit(1);
-        }
 
         try {
             ScrapeNHL.run(useCache, date);
