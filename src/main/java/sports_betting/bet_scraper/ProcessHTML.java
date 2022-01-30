@@ -172,21 +172,26 @@ public class ProcessHTML {
                         List<Integer> sets2 = new ArrayList<>(5);
                         int setsWon1 = 0;
                         int setsWon2 = 0;
-                        for (Element set : sets.get(0).children()) {
-                            int games1 = Integer.parseInt(set.select("span").get(0).text().trim(), 10);
-                            int games2 = Integer.parseInt(set.select("span").get(1).text().trim(), 10);
-                            sets1.add(games1);
-                            sets2.add(games2);
-                            if (games1 > games2) {
-                                setsWon1 ++;
-                            } else if (games2 > games1) {
-                                setsWon2 ++;
+                        try {
+                            for (Element set : sets.get(0).children()) {
+                                int games1 = Integer.parseInt(set.select("span").get(0).text().trim(), 10);
+                                int games2 = Integer.parseInt(set.select("span").get(1).text().trim(), 10);
+                                sets1.add(games1);
+                                sets2.add(games2);
+                                if (games1 > games2) {
+                                    setsWon1++;
+                                } else if (games2 > games1) {
+                                    setsWon2++;
+                                }
                             }
+                            results.put("away_sets", sets1);
+                            results.put("home_sets", sets2);
+                            results.put("away_sets_won", setsWon1);
+                            results.put("home_sets_won", setsWon2);
+                        } catch(Exception e) {
+                            e.printStackTrace();;
+                            // likely still in progress
                         }
-                        results.put("away_sets", sets1);
-                        results.put("home_sets", sets2);
-                        results.put("away_sets_won", setsWon1);
-                        results.put("home_sets_won", setsWon2);
                     }
                 }
             }
@@ -202,9 +207,11 @@ public class ProcessHTML {
             }
             LocalDateTime dateTime = LocalDateTime.of(date, time);
             //System.out.println(dateTime);
-            ScrapeSBRHelper.ingestGame(
-                sport, date, betType, team1, team2, dateTime, winner, results
-            );
+            if (betType.equals(ScrapeSBRHelper.MONEY_LINE_FRIENDLY)) {
+                ScrapeSBRHelper.ingestGame(
+                        sport, date, team1, team2, dateTime, winner, results
+                );
+            }
             Elements books = eventLine.select(".eventLine-book");
             Elements opener = eventLine.select(".eventLine-opener");
             List<Element> allBooks = new ArrayList<>(books);

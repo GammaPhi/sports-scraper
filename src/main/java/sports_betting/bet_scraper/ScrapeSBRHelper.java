@@ -264,14 +264,13 @@ public class ScrapeSBRHelper {
         return null;
     }
 
-    public static void ingestGame(String sport, LocalDate date, String betType, String team1, String team2, LocalDateTime dateTime, Integer winner, Map<String, Object> results) throws SQLException {
+    public static void ingestGame(String sport, LocalDate date, String team1, String team2, LocalDateTime dateTime, Integer winner, Map<String, Object> results) throws SQLException {
         ZoneOffset offset = ZoneId.of("America/Los_Angeles").getRules().getOffset(dateTime);
         long epoch = dateTime.toEpochSecond(offset);
 
         Map<String, Object> data = new HashMap<>();
         data.put("sport", sport);
         data.put("date", date);
-        data.put("bet_type", betType);
         data.put("away_team", team1);
         data.put("home_team", team2);
         data.put("timestamp", epoch);
@@ -281,7 +280,7 @@ public class ScrapeSBRHelper {
                 "sports",
                 "games",
                 data,
-                Arrays.asList("sport", "date", "bet_type", "away_team", "home_team")
+                Arrays.asList("sport", "date", "away_team", "home_team")
         );
     }
 
